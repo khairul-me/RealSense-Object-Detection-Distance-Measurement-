@@ -1,4 +1,26 @@
 # camera_viewer.py
+#
+# This script provides a simple viewer application for interacting with the RealSense camera through the `RealsenseCamera` class.
+# It initializes the camera, captures frames, and displays the color and depth frames with interactive features. Using OpenCV,
+# this viewer enables users to click on any point within the color frame to measure the distance of that point from the camera.
+# Additionally, it visualizes the depth frame with a color map overlay for easy interpretation.
+#
+# Key Features:
+# - Camera Initialization with Retry Mechanism: Attempts to initialize the camera up to three times in case of failure.
+# - Mouse Interaction for Distance Measurement: Users can click on the color image to measure and display the distance to that point.
+# - Depth Visualization: The depth frame is shown as a color-mapped image for easy depth perception.
+# - Real-Time Frame Display: Displays both color and depth frames in real time.
+#
+# Requirements:
+# - OpenCV (`cv2`)
+# - Intel RealSense SDK (`pyrealsense2`)
+# - Numpy (`numpy`)
+#
+# Usage:
+# - Click on the color image to display distance information at the clicked point.
+# - Press 'q' to exit the application.
+
+# camera_viewer.py
 import cv2
 from realsense_camera import RealsenseCamera
 import time
