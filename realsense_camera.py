@@ -1,4 +1,24 @@
 # realsense_camera.py
+# 
+# This script defines a `RealsenseCamera` class for interacting with an Intel RealSense depth camera, processing depth and color data,
+# and performing object detection with a YOLO model. Using the pyrealsense2 library, the class initializes the camera, configures the 
+# depth and color streams, and aligns them to process distance information of detected objects. The YOLO model, from the Ultralytics 
+# library, detects objects in real time from the color stream, and the code computes the distance of each detected object from the 
+# camera. 
+# 
+# Key Features:
+# - Camera Initialization and Pipeline Setup: Starts and configures the RealSense camera pipeline.
+# - Object Detection: Utilizes a YOLO model to detect objects within the camera's view.
+# - Distance Calculation: Calculates the depth (distance) of detected objects from the camera.
+# - Annotation: Draws bounding boxes, class labels, and distance information on the camera feed.
+# - User Interaction: Captures a clicked point in the frame to display the object's distance from the camera.
+#
+# Requirements:
+# - Intel RealSense SDK (`pyrealsense2`)
+# - OpenCV (`cv2`)
+# - Ultralytics YOLO model (`ultralytics` library)
+
+# realsense_camera.py
 import pyrealsense2 as rs
 import numpy as np
 import cv2
