@@ -42,6 +42,8 @@ graph TD
     G1 --> I[Distance Measurement]
     G2 --> I
 ```
+## Output
+![Image 02](https://github.com/user-attachments/assets/e3e21193-f357-489a-a798-f558b718d274)
 
 ## ✨ Features
 
