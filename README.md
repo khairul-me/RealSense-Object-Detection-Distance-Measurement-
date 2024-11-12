@@ -1,195 +1,240 @@
-# RealSense Object Detection & Distance Measurement 🎥📏
+# Intel RealSense Camera Object Detection and Distance Measurement
 
-A Python application that combines Intel RealSense depth camera capabilities with YOLOv8 object detection to provide real-time object detection and precise distance measurements.
+![Project Banner](https://img.shields.io/badge/Intel-RealSense-blue)
+![Python Version](https://img.shields.io/badge/Python-3.8%2B-green)
+![OpenCV](https://img.shields.io/badge/OpenCV-4.0%2B-red)
+![YOLOv8](https://img.shields.io/badge/YOLO-v8-yellow)
+![License](https://img.shields.io/badge/License-MIT-blue)
 
-![Project Banner](https://raw.githubusercontent.com/Intel-realsense/.github/main/profile/T265_D435.png)
+## 📝 Table of Contents
+- [About](#about)
+- [System Architecture](#system-architecture)
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Technical Details](#technical-details)
+- [Code Structure](#code-structure)
+- [Results](#results)
+- [Author](#author)
+- [Acknowledgments](#acknowledgments)
 
-## Features 🌟
+## 🎯 About
 
-- **Real-time Object Detection**: Using YOLOv8 for accurate object identification
-- **Distance Measurement**: Precise depth sensing using Intel RealSense camera
-- **Interactive Interface**: Click-to-measure functionality for custom point measurements
-- **Visual Feedback**: Color-coded depth visualization and object bounding boxes
-- **Multi-Object Tracking**: Detection and distance measurement for multiple objects simultaneously
+This project combines Intel RealSense depth sensing technology with YOLOv8 object detection to create a sophisticated real-time object detection and distance measurement system. It provides an interactive interface for measuring distances to detected objects and specific points in the camera's field of view, with depth visualization capabilities.
 
-## System Architecture 📐
+## 🏗 System Architecture
 
 ```mermaid
 graph TD
-    A[RealSense D435/D455] --> B[Camera Module]
-    B --> C[Color Stream]
-    B --> D[Depth Stream]
-    C --> E[YOLO Detection]
-    D --> F[Distance Calculation]
-    E --> G[Object Visualization]
-    F --> G
-    G --> H[Display Output]
-    I[User Input] --> F
+    A[Intel RealSense Camera] --> B[Camera Pipeline]
+    B --> C1[Color Stream<br/>640x480 @ 30fps]
+    B --> C2[Depth Stream<br/>640x480 @ 30fps]
+    C1 --> D[Stream Alignment]
+    C2 --> D
+    D --> E1[YOLO Detection<br/>YOLOv8n Model]
+    D --> E2[Depth Processing]
+    E1 --> F[Frame Processing]
+    E2 --> F
+    F --> G1[Color Frame Display]
+    F --> G2[Depth Frame Display]
+    H[User Interaction] --> G1
+    G1 --> I[Distance Measurement]
+    G2 --> I
 ```
 
-## Requirements 📋
+## ✨ Features
 
-### Hardware
-- Intel RealSense D435 or D455 depth camera
+### Core Capabilities
+- **Real-time Object Detection**: 
+  - Powered by YOLOv8 neural network
+  - Multi-object detection with confidence scores
+  - Automatic object classification
+
+### Distance Measurement
+- **Point-to-Point Distance**: 
+  - Click-based distance measurement
+  - Real-time distance updates
+  - Metric unit display (meters)
+
+### Visualization
+- **Dual Display Windows**:
+  - Color frame with object detection
+  - Depth frame with color mapping
+- **Interactive Elements**:
+  - Bounding boxes for detected objects
+  - Distance labels
+  - Color-coded depth visualization
+
+### System Features
+- **Robust Camera Handling**:
+  - Automatic camera initialization
+  - Error recovery with retry mechanism
+  - Stream alignment for accurate measurements
+
+## 🔧 Prerequisites
+
+### Hardware Requirements
+- Intel RealSense Depth Camera (D400 series recommended)
 - USB 3.0 port
-- Computer with minimum 8GB RAM (16GB recommended)
+- Computing system with:
+  - Processor: Intel Core i5 or better
+  - RAM: 8GB minimum
+  - GPU: Recommended for better YOLO performance
 
-### Software
+### Software Requirements
+```plaintext
 - Python 3.8 or higher
 - Intel RealSense SDK 2.0
-- Required Python packages:
-  ```
-  pyrealsense2
-  opencv-python
-  numpy
-  ultralytics
-  ```
+- OpenCV (cv2)
+- NumPy
+- Ultralytics YOLO
+- pyrealsense2
+```
 
-## Installation 🔧
+## 📥 Installation
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/realsense-object-detection.git
-   cd realsense-object-detection
-   ```
+### 1. Intel RealSense SDK Installation
 
-2. **Install Intel RealSense SDK 2.0**
-   - Download from [Intel RealSense SDK 2.0](https://www.intelrealsense.com/sdk-2/)
-   - Follow installation instructions for your operating system
+#### Windows:
+1. Download SDK from [Intel RealSense SDK 2.0](https://www.intelrealsense.com/sdk-2/)
+2. Run the installer and follow the prompts
+3. Restart your system after installation
 
-3. **Set up Python environment**
-   ```bash
-   # Create virtual environment
-   python -m venv venv
+#### Ubuntu:
+```bash
+sudo apt-get update && sudo apt-get upgrade
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-key F6E65AC044F831AC80A06380C8B3A55A6F3EFCDE
+sudo add-apt-repository "deb https://librealsense.intel.com/Debian/apt-repo $(lsb_release -cs) main"
+sudo apt-get install librealsense2-dkms librealsense2-utils librealsense2-dev
+```
 
-   # Activate virtual environment
-   # On Windows:
-   .\venv\Scripts\activate
-   # On Linux/Mac:
-   source venv/bin/activate
+### 2. Python Dependencies
+```bash
+# Create and activate virtual environment (recommended)
+python -m venv venv
+source venv/bin/activate  # Linux/Mac
+venv\Scripts\activate     # Windows
 
-   # Install required packages
-   pip install -r requirements.txt
-   ```
+# Install required packages
+pip install pyrealsense2
+pip install opencv-python
+pip install numpy
+pip install ultralytics
+```
 
-## Usage 💻
+### 3. Project Setup
+```bash
+# Clone the repository
+git clone https://github.com/your-username/realsense-object-detection.git
 
-1. **Connect your RealSense camera** to a USB 3.0 port
+# Navigate to project directory
+cd realsense-object-detection
 
-2. **Run the application**
+# Verify installation
+python camera_viewer.py
+```
+
+## 🎮 Usage
+
+### Running the Application
+1. Connect your RealSense camera
+2. Open terminal/command prompt
+3. Navigate to project directory
+4. Run:
    ```bash
    python camera_viewer.py
    ```
 
-3. **Interact with the application**
-   - Click anywhere on the color image to measure distance to that point
-   - Objects will be automatically detected and labeled with distances
-   - Press 'q' to quit the application
+### Interactive Features
+- **Distance Measurement**:
+  - Left-click anywhere in the color frame
+  - Distance will be displayed in meters
+- **Object Detection**:
+  - Objects automatically detected
+  - Bounding boxes show object class and distance
+- **Exit Application**:
+  - Press 'q' to quit
 
-## Code Structure 🏗️
+## 🔍 Technical Details
 
-```
-project/
-│
-├── realsense_camera.py     # Main camera and processing class
-├── camera_viewer.py        # Application entry point and UI
-└── requirements.txt        # Project dependencies
-```
-
-### Class Diagram
-
-```mermaid
-classDiagram
-    class RealsenseCamera {
-        +pipeline
-        +clicked_point
-        +model
-        +depth_scale
-        +align
-        +init_camera()
-        +mouse_callback()
-        +get_distance()
-        +draw_distance_info()
-        +process_detections()
-        +get_frame_stream()
-        +release()
-    }
+### Camera Configuration
+```python
+# Stream Configuration
+config.enable_stream(rs.stream.depth, 640, 480, rs.format.z16, 30)
+config.enable_stream(rs.stream.color, 640, 480, rs.format.bgr8, 30)
 ```
 
-## Features in Detail 🔍
+### Frame Processing Pipeline
+1. Camera frame capture
+2. Stream alignment
+3. YOLO object detection
+4. Depth measurement
+5. Visualization overlay
+6. Display output
 
-### Distance Measurement
-- Real-time depth measurements in meters
-- Click-to-measure functionality
-- Visual feedback with distance overlay
+### Distance Calculation
+```python
+def get_distance(self, depth_frame, point):
+    return depth_frame[point[1], point[0]] * self.depth_scale
+```
 
-### Object Detection
-- YOLOv8 integration for real-time detection
-- Multiple object class support
-- Confidence scores display
-- Bounding box visualization
+## 📁 Code Structure
 
-### Depth Visualization
-- Color-mapped depth display
-- Aligned color and depth frames
-- Interactive measurement points
+### Files Organization
+```plaintext
+realsense-object-detection/
+├── camera_viewer.py       # Main application script
+├── realsense_camera.py    # Camera handling class
+├── requirements.txt       # Dependencies list
+└── README.md             # Documentation
+```
 
-## Examples 📸
+### Key Components
+1. **RealsenseCamera Class**: Core functionality
+   - Camera initialization
+   - Frame processing
+   - Object detection
+   - Distance measurement
 
-Here's what you'll see when running the application:
+2. **Main Application**: User interface
+   - Window management
+   - Event handling
+   - Visualization
+   - User interaction
 
-1. **Color Stream with Object Detection**
-   - RGB image with bounding boxes
-   - Object labels and confidence scores
-   - Distance measurements
+## 📊 Results
 
-2. **Depth Visualization**
-   - Color-coded depth map
-   - Blue (far) to red (near) visualization
-   - Interactive measurement points
+The system provides:
+- Real-time object detection and tracking
+- Accurate distance measurements
+- Interactive point selection
+- Depth visualization
+- Robust error handling
 
-## Troubleshooting 🔧
+## 👤 Author
 
-Common issues and solutions:
+* **Md Khairul Islam**
+   * Institution: Hobart and William Smith Colleges, Geneva, NY
+   * Major: Robotics and Computer Science
+   * Contact: khairul.islam@hws.edu
 
-1. **Camera Not Found**
-   - Ensure camera is connected to USB 3.0 port
-   - Check if Intel RealSense SDK is properly installed
-   - Try unplugging and reconnecting the camera
+## 🙏 Acknowledgments
 
-2. **Slow Performance**
-   - Reduce frame resolution in settings
-   - Ensure adequate system resources
-   - Close other applications using the camera
-
-3. **Installation Issues**
-   - Update system packages
-   - Install build tools for your OS
-   - Check Python version compatibility
-
-## Contributing 🤝
-
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a Pull Request
-
-## License 📄
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments 🙏
-
-- Intel RealSense SDK
-- Ultralytics YOLOv8
+- Intel RealSense Team for the comprehensive SDK
+- Ultralytics for YOLOv8
 - OpenCV community
 - Python community
 
-## Contact 📧
+## 📚 Additional Resources
 
-For questions or feedback, please:
-- Open an issue in this repository
-- Contact: KHAIRUL.ISLAM@HWS.EDU
+- [Intel RealSense Documentation](https://dev.intelrealsense.com/docs/)
+- [YOLOv8 Documentation](https://docs.ultralytics.com/)
+- [OpenCV Documentation](https://docs.opencv.org/)
 
 ---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
